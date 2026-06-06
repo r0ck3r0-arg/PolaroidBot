@@ -78,6 +78,9 @@ body.lang-pt .inline-lang[data-lang="pt"]{display:inline}
 .tag-app{background:var(--accent-glow);color:var(--accent);border:1px solid rgba(155,89,182,0.25)}
 .tag-camera{background:rgba(46,204,113,0.1);color:#2ecc71;border:1px solid rgba(46,204,113,0.2)}
 .tag-auto{background:rgba(241,196,15,0.1);color:#f1c40f;border:1px solid rgba(241,196,15,0.2)}
+.tag-obs{background:rgba(52,152,219,0.12);color:#3498db;border:1px solid rgba(52,152,219,0.25)}
+.tag-optional{background:rgba(46,204,113,0.1);color:#2ecc71;border:1px solid rgba(46,204,113,0.2)}
+.sub-label{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--text3);margin:16px 0 8px}
 .step-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px 20px;margin-top:14px}
 .step-list{list-style:none;display:flex;flex-direction:column;gap:10px}
 .step-list li{display:flex;align-items:flex-start;gap:10px;font-size:14px;color:var(--text2)}
@@ -164,6 +167,8 @@ footer{border-top:1px solid var(--border);padding:24px 0;text-align:center;font-
       <span class="flow-chip">🖼 Polaroid</span>
       <span class="flow-arrow">→</span>
       <span class="flow-chip">🤖 Discord</span>
+      <span class="flow-arrow">+</span>
+      <span class="flow-chip" style="border-style:dashed;opacity:.8">🎬 OBS overlay</span>
     </div>
     <div class="hero-divider"></div>
   </section>
@@ -335,9 +340,102 @@ footer{border-top:1px solid var(--border);padding:24px 0;text-align:center;font-
         </div>
       </div>
  
-      <!-- STEP 7 -->
+      <!-- STEP 7 — OBS -->
       <div class="step fade-in">
         <div class="step-left"><div class="step-num">7</div><div class="step-line"></div></div>
+        <div class="step-content">
+          <div class="step-title">
+            <span data-lang="es">Integrar OBS — overlay en stream</span>
+            <span data-lang="en">OBS Integration — stream overlay</span>
+            <span data-lang="pt">Integrar OBS — overlay na live</span>
+            <span class="step-tag tag-obs">OBS</span>
+            <span class="step-tag tag-optional">
+              <span data-lang="es">Opcional</span>
+              <span data-lang="en">Optional</span>
+              <span data-lang="pt">Opcional</span>
+            </span>
+          </div>
+          <div style="color:var(--text2);font-size:14px;margin-top:6px;margin-bottom:16px">
+            <span data-lang="es">Cuando llega un redeem, PolaroidBot puede reproducir una <strong style="color:var(--text)">alerta de sonido</strong> para que sepas que alguien activó la recompensa y poses para la foto, y luego <strong style="color:var(--text)">mostrar la Polaroid en tu stream</strong> durante unos segundos antes de ocultarla automáticamente. OBS debe estar abierto con el WebSocket habilitado.</span>
+            <span data-lang="en">When a redeem arrives, PolaroidBot can play an <strong style="color:var(--text)">alert sound</strong> so you know someone triggered the reward and you can pose for the photo, then <strong style="color:var(--text)">show the Polaroid on your stream</strong> for a few seconds before hiding it automatically. OBS must be open with WebSocket enabled.</span>
+            <span data-lang="pt">Quando chega um redeem, o PolaroidBot pode tocar um <strong style="color:var(--text)">som de alerta</strong> para você saber que alguém ativou a recompensa e posar para a foto, depois <strong style="color:var(--text)">mostrar a Polaroid na sua live</strong> por alguns segundos antes de ocultá-la automaticamente. O OBS deve estar aberto com o WebSocket habilitado.</span>
+          </div>
+
+          <!-- A: Enable WebSocket in OBS -->
+          <div class="sub-label">
+            <span data-lang="es">A — Habilitar WebSocket en OBS</span>
+            <span data-lang="en">A — Enable WebSocket in OBS</span>
+            <span data-lang="pt">A — Habilitar WebSocket no OBS</span>
+          </div>
+          <div class="step-card">
+            <ul class="step-list">
+              <li><span data-lang="es">Abrí OBS → menú superior <strong>Herramientas</strong> → <strong>WebSocket Server Settings</strong></span><span data-lang="en">Open OBS → top menu <strong>Tools</strong> → <strong>WebSocket Server Settings</strong></span><span data-lang="pt">Abra o OBS → menu superior <strong>Ferramentas</strong> → <strong>WebSocket Server Settings</strong></span></li>
+              <li><span data-lang="es">Activar el checkbox <strong>Enable WebSocket server</strong></span><span data-lang="en">Check <strong>Enable WebSocket server</strong></span><span data-lang="pt">Marcar <strong>Enable WebSocket server</strong></span></li>
+              <li><span data-lang="es">Puerto: dejalo en <code>4455</code> (por defecto, no lo cambies)</span><span data-lang="en">Port: leave as <code>4455</code> (default, don't change it)</span><span data-lang="pt">Porta: deixe em <code>4455</code> (padrão, não mude)</span></li>
+              <li><span data-lang="es">Si querés poner password: activar <strong>Enable Authentication</strong> → escribí tu password. Si no, dejalo sin password (más simple).</span><span data-lang="en">To set a password: check <strong>Enable Authentication</strong> → enter your password. Otherwise leave it without a password (simpler).</span><span data-lang="pt">Para definir senha: marcar <strong>Enable Authentication</strong> → digitar sua senha. Caso contrário, deixe sem senha (mais simples).</span></li>
+              <li><span data-lang="es">Click en <strong>Apply</strong> → ¡listo! OBS ya está escuchando conexiones.</span><span data-lang="en">Click <strong>Apply</strong> → done! OBS is now listening for connections.</span><span data-lang="pt">Clique em <strong>Apply</strong> → pronto! OBS agora está ouvindo conexões.</span></li>
+            </ul>
+          </div>
+
+          <!-- B: Configure in PolaroidBot -->
+          <div class="sub-label">
+            <span data-lang="es">B — Configurar en PolaroidBot</span>
+            <span data-lang="en">B — Configure in PolaroidBot</span>
+            <span data-lang="pt">B — Configurar no PolaroidBot</span>
+          </div>
+          <div class="step-card">
+            <ul class="step-list">
+              <li><span data-lang="es">PolaroidBot → pestaña <strong>OBS</strong> → activar <strong>"Habilitar integración con OBS"</strong></span><span data-lang="en">PolaroidBot → <strong>OBS</strong> tab → check <strong>"Enable OBS integration"</strong></span><span data-lang="pt">PolaroidBot → aba <strong>OBS</strong> → ativar <strong>"Habilitar integração com OBS"</strong></span></li>
+              <li><span data-lang="es">Host: <code>localhost</code> | Puerto: <code>4455</code> | Password: la misma que pusiste en OBS (o dejá vacío si no configuraste ninguna)</span><span data-lang="en">Host: <code>localhost</code> | Port: <code>4455</code> | Password: same as OBS (or leave empty if no password was set)</span><span data-lang="pt">Host: <code>localhost</code> | Porta: <code>4455</code> | Password: a mesma do OBS (ou deixe vazio se não configurou nenhuma)</span></li>
+              <li><span data-lang="es">Click en <strong>Probar Conexión</strong> — tiene que aparecer en <strong style="color:var(--green)">verde</strong> con el nombre de tu escena activa</span><span data-lang="en">Click <strong>Test Connection</strong> — it should appear in <strong style="color:var(--green)">green</strong> with your active scene name</span><span data-lang="pt">Clique em <strong>Testar Conexão</strong> — deve aparecer em <strong style="color:var(--green)">verde</strong> com o nome da sua cena ativa</span></li>
+              <li><span data-lang="es">Configurá <strong>Tiempo de visualización en stream</strong> (por defecto 6 segundos)</span><span data-lang="en">Set <strong>Stream display time</strong> (default 6 seconds)</span><span data-lang="pt">Configure <strong>Tempo de exibição na live</strong> (padrão 6 segundos)</span></li>
+              <li><span data-lang="es">Click en <strong>Guardar</strong></span><span data-lang="en">Click <strong>Save</strong></span><span data-lang="pt">Clique em <strong>Salvar</strong></span></li>
+            </ul>
+          </div>
+
+          <!-- C: What happens on each redeem -->
+          <div class="sub-label">
+            <span data-lang="es">C — Qué pasa con cada redeem</span>
+            <span data-lang="en">C — What happens on each redeem</span>
+            <span data-lang="pt">C — O que acontece em cada redeem</span>
+          </div>
+          <div class="step-card">
+            <ul class="step-list">
+              <li><span data-lang="es">🔔 Suena una <strong>alerta de notificación</strong> — es tu señal para posar para la foto</span><span data-lang="en">🔔 A <strong>notification alert</strong> plays — your cue to pose for the photo</span><span data-lang="pt">🔔 Um <strong>alerta sonoro</strong> toca — seu sinal para posar para a foto</span></li>
+              <li><span data-lang="es">📸 PolaroidBot captura la webcam y suena el <strong>shutter</strong> (clic de cámara)</span><span data-lang="en">📸 PolaroidBot captures the webcam and plays the <strong>shutter</strong> click sound</span><span data-lang="pt">📸 PolaroidBot captura a webcam e toca o som de <strong>shutter</strong> (clique da câmera)</span></li>
+              <li><span data-lang="es">🖼 La Polaroid <strong>aparece automáticamente en tu escena de OBS</strong> como una fuente llamada <code>PolaroidBot_Preview</code>, posicionada en la esquina inferior derecha</span><span data-lang="en">🖼 The Polaroid <strong>appears automatically in your OBS scene</strong> as a source named <code>PolaroidBot_Preview</code>, positioned in the bottom-right corner</span><span data-lang="pt">🖼 A Polaroid <strong>aparece automaticamente na sua cena do OBS</strong> como uma fonte chamada <code>PolaroidBot_Preview</code>, posicionada no canto inferior direito</span></li>
+              <li><span data-lang="es">⏱ Después del tiempo configurado, <strong>desaparece sola</strong> de OBS sin que tengas que hacer nada</span><span data-lang="en">⏱ After the configured time, it <strong>disappears on its own</strong> from OBS without you doing anything</span><span data-lang="pt">⏱ Após o tempo configurado, <strong>desaparece sozinha</strong> do OBS sem precisar fazer nada</span></li>
+              <li><span data-lang="es">🤖 La foto se envía a Discord y queda guardada en el canal configurado</span><span data-lang="en">🤖 The photo is sent to Discord and saved in the configured channel</span><span data-lang="pt">🤖 A foto é enviada para o Discord e fica salva no canal configurado</span></li>
+            </ul>
+          </div>
+
+          <!-- D: Move and resize in OBS -->
+          <div class="sub-label">
+            <span data-lang="es">D — Mover y redimensionar la Polaroid en OBS</span>
+            <span data-lang="en">D — Move and resize the Polaroid in OBS</span>
+            <span data-lang="pt">D — Mover e redimensionar a Polaroid no OBS</span>
+          </div>
+          <div class="step-card">
+            <ul class="step-list">
+              <li><span data-lang="es">La primera vez que llega un redeem, aparece la fuente <code>PolaroidBot_Preview</code> en tu lista de <strong>Fuentes</strong> de OBS. Si no ves nada en el canvas, buscala en la lista y hacé doble click para centrarla.</span><span data-lang="en">The first time a redeem arrives, the <code>PolaroidBot_Preview</code> source appears in your OBS <strong>Sources</strong> list. If you don't see it on the canvas, find it in the list and double-click to center it.</span><span data-lang="pt">Na primeira vez que um redeem chegar, a fonte <code>PolaroidBot_Preview</code> aparece na lista de <strong>Fontes</strong> do OBS. Se não vir no canvas, encontre-a na lista e dê duplo clique para centralizá-la.</span></li>
+              <li><span data-lang="es">En el canvas de OBS podés <strong>hacer click en la fuente y arrastrarla</strong> a la posición que quieras dentro de tu escena</span><span data-lang="en">In the OBS canvas you can <strong>click the source and drag it</strong> to any position within your scene</span><span data-lang="pt">No canvas do OBS você pode <strong>clicar na fonte e arrastá-la</strong> para qualquer posição dentro da sua cena</span></li>
+              <li><span data-lang="es">Podés <strong>redimensionarla</strong> agarrando los cuadraditos de los bordes. Mantené <code>Shift</code> para respetar la proporción.</span><span data-lang="en">You can <strong>resize it</strong> by dragging the corner handles. Hold <code>Shift</code> to keep the aspect ratio.</span><span data-lang="pt">Você pode <strong>redimensioná-la</strong> arrastando as alças nos cantos. Segure <code>Shift</code> para manter a proporção.</span></li>
+              <li><span data-lang="es">Click derecho en la fuente → <strong>Transformar → Restablecer transformación</strong> para volver a la posición automática original</span><span data-lang="en">Right-click the source → <strong>Transform → Reset Transform</strong> to return to the original auto position</span><span data-lang="pt">Clique com botão direito na fonte → <strong>Transformar → Redefinir transformação</strong> para voltar à posição automática original</span></li>
+              <li><span data-lang="es">La fuente queda <strong>oculta automáticamente</strong> entre redeems — no ocupa espacio visible en tu stream cuando no hay foto</span><span data-lang="en">The source is automatically <strong>hidden between redeems</strong> — it takes no visible space on your stream when there's no photo</span><span data-lang="pt">A fonte fica <strong>oculta automaticamente</strong> entre os redeems — não ocupa espaço visível na sua live quando não há foto</span></li>
+            </ul>
+          </div>
+
+          <div class="highlight-box yellow">
+            <span data-lang="es"><strong>⚠ OBS debe estar abierto</strong> cuando iniciás el bot. Si cerrás OBS a mitad del stream, el overlay deja de funcionar pero Twitch y Discord siguen operando sin interrupciones. Podés <strong>reiniciar el bot</strong> para reconectar OBS.</span>
+            <span data-lang="en"><strong>⚠ OBS must be open</strong> when you start the bot. If you close OBS mid-stream, the overlay stops working but Twitch and Discord keep running uninterrupted. You can <strong>restart the bot</strong> to reconnect OBS.</span>
+            <span data-lang="pt"><strong>⚠ O OBS deve estar aberto</strong> quando você inicia o bot. Se fechar o OBS no meio da live, o overlay para de funcionar mas Twitch e Discord continuam normalmente. Você pode <strong>reiniciar o bot</strong> para reconectar o OBS.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 8 -->
+      <div class="step fade-in">
+        <div class="step-left"><div class="step-num">8</div><div class="step-line"></div></div>
         <div class="step-content">
           <div class="step-title">
             <span data-lang="es">Iniciar el Bot</span>
@@ -408,6 +506,12 @@ footer{border-top:1px solid var(--border);padding:24px 0;text-align:center;font-
       <span data-lang="en">Open PolaroidBot, fill in the fields and hit ▶ Start Bot.</span>
       <span data-lang="pt">Abra o PolaroidBot, preencha os campos e clique em ▶ Iniciar Bot.</span>
     </p>
+    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:24px">
+      <a href="https://github.com/r0ck3r0-arg/polaroid-botv2/releases/download/v2.0.0/PolaroidBot.Setup.2.0.0.exe" class="cta-btn primary" style="font-size:16px;padding:16px 36px">
+        ⬇ <span data-lang="es">Descargar PolaroidBot</span><span data-lang="en">Download PolaroidBot</span><span data-lang="pt">Baixar PolaroidBot</span>
+        <span style="font-size:11px;opacity:.75;margin-left:4px">v2.0.0 · Windows x64</span>
+      </a>
+    </div>
     <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
       <a href="https://dashboard.twitch.tv" target="_blank" class="cta-btn" style="background:rgba(145,70,255,0.15);border-color:rgba(145,70,255,0.3);color:#9146ff">💜 Twitch Dashboard</a>
       <a href="https://discord.com/developers/applications" target="_blank" class="cta-btn" style="background:rgba(88,101,242,0.15);border-color:rgba(88,101,242,0.3);color:#5865f2">🤖 Discord Dev Portal</a>
