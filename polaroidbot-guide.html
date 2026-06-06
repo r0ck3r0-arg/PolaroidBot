@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PolaroidBot — Guía de configuración</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,400;0,500;1,400&family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --bg:#0a0a10;
+  --surface:#13131e;
+  --surface2:#1c1c2b;
+  --surface3:#252538;
+  --border:#2a2a40;
+  --border2:#353550;
+  --accent:#9b59b6;
+  --accent2:#7d3fa0;
+  --accent-glow:rgba(155,89,182,0.15);
+  --green:#2ecc71;
+  --green-dim:rgba(46,204,113,0.12);
+  --yellow:#f1c40f;
+  --yellow-dim:rgba(241,196,15,0.1);
+  --red:#e74c3c;
+  --text:#e8e8f4;
+  --text2:#9090b0;
+  --text3:#5a5a78;
+  --radius:12px;
+  --radius-lg:18px;
+}
+
+html{scroll-behavior:smooth}
+body{
+  font-family:'DM Sans',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  font-size:15px;
+  line-height:1.7;
+  overflow-x:hidden;
+}
+
+/* ── NOISE TEXTURE OVERLAY ── */
+body::before{
+  content:'';
+  position:fixed;
+  inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events:none;
+  z-index:0;
+  opacity:.4;
+}
+
+/* ── GLOW ORBS ── */
+.orb{
+  position:fixed;
+  border-radius:50%;
+  filter:blur(100px);
+  pointer-events:none;
+  z-index:0;
+}
+.orb-1{width:600px;height:600px;background:rgba(155,89,182,0.08);top:-200px;right:-200px}
+.orb-2{width:400px;height:400px;background:rgba(46,204,113,0.05);bottom:20%;left:-150px}
+.orb-3{width:300px;height:300px;background:rgba(52,152,219,0.06);top:50%;left:40%}
+
+/* ── LAYOUT ── */
+.wrap{
+  position:relative;
+  z-index:1;
+  max-width:860px;
+  margin:0 auto;
+  padding:0 24px;
+}
+
+/* ── HERO ── */
+.hero{
+  padding:100px 0 80px;
+  text-align:center;
+}
+
+.hero-badge{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  background:var(--accent-glow);
+  border:1px solid rgba(155,89,182,0.3);
+  border-radius:99px;
+  padding:6px 16px;
+  font-size:12px;
+  font-family:'DM Mono',monospace;
+  color:var(--accent);
+  letter-spacing:1px;
+  text-transform:uppercase;
+  margin-bottom:28px;
+}
+.hero-badge::before{content:'●';font-size:8px;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+.hero h1{
+  font-family:'Syne',sans-serif;
+  font-weight:800;
+  font-size:clamp(42px,8vw,72px);
+  line-height:1.05;
+  letter-spacing:-2px;
+  margin-bottom:20px;
+}
+.hero h1 span{color:var(--accent)}
+
+.hero-sub{
+  font-size:17px;
+  color:var(--text2);
+  max-width:520px;
+  margin:0 auto 40px;
+  font-weight:300;
+}
+
+.hero-flow{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:12px;
+  flex-wrap:wrap;
+  margin-bottom:60px;
+}
+.flow-chip{
+  background:var(--surface2);
+  border:1px solid var(--border);
+  border-radius:99px;
+  padding:8px 20px;
+  font-size:13px;
+  font-weight:500;
+  color:var(--text);
+}
+.flow-arrow{color:var(--text3);font-size:18px}
+
+.hero-divider{
+  width:100%;
+  height:1px;
+  background:linear-gradient(90deg,transparent,var(--border),transparent);
+}
+
+/* ── SECTION TITLES ── */
+.section{padding:70px 0}
+.section-label{
+  display:inline-block;
+  font-family:'DM Mono',monospace;
+  font-size:11px;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  color:var(--accent);
+  margin-bottom:12px;
+}
+.section-title{
+  font-family:'Syne',sans-serif;
+  font-weight:700;
+  font-size:clamp(24px,4vw,32px);
+  letter-spacing:-0.5px;
+  margin-bottom:8px;
+}
+.section-desc{
+  color:var(--text2);
+  font-size:15px;
+  max-width:540px;
+  margin-bottom:40px;
+}
+
+/* ── STEPS ── */
+.steps{display:flex;flex-direction:column;gap:2px}
+
+.step{
+  display:grid;
+  grid-template-columns:56px 1fr;
+  gap:0 24px;
+  position:relative;
+}
+
+.step-left{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
+
+.step-num{
+  width:44px;
+  height:44px;
+  border-radius:50%;
+  background:var(--surface2);
+  border:1px solid var(--border2);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-family:'Syne',sans-serif;
+  font-weight:700;
+  font-size:15px;
+  color:var(--accent);
+  flex-shrink:0;
+  position:relative;
+  z-index:1;
+  transition:background .2s,border-color .2s;
+}
+
+.step:hover .step-num{
+  background:var(--accent-glow);
+  border-color:var(--accent);
+}
+
+.step-line{
+  width:1px;
+  flex:1;
+  min-height:24px;
+  background:var(--border);
+  margin:4px 0;
+}
+.step:last-child .step-line{display:none}
+
+.step-content{
+  padding:4px 0 36px;
+}
+
+.step-title{
+  font-family:'Syne',sans-serif;
+  font-weight:600;
+  font-size:17px;
+  margin-bottom:8px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding-top:9px;
+}
+
+.step-tag{
+  font-size:10px;
+  font-family:'DM Mono',monospace;
+  letter-spacing:1px;
+  text-transform:uppercase;
+  padding:3px 10px;
+  border-radius:99px;
+  font-weight:400;
+}
+.tag-twitch{background:rgba(145,70,255,0.15);color:#9146ff;border:1px solid rgba(145,70,255,0.25)}
+.tag-discord{background:rgba(88,101,242,0.15);color:#5865f2;border:1px solid rgba(88,101,242,0.25)}
+.tag-app{background:var(--accent-glow);color:var(--accent);border:1px solid rgba(155,89,182,0.25)}
+.tag-camera{background:rgba(46,204,113,0.1);color:#2ecc71;border:1px solid rgba(46,204,113,0.2)}
+.tag-auto{background:rgba(241,196,15,0.1);color:#f1c40f;border:1px solid rgba(241,196,15,0.2)}
+
+.step-body{
+  color:var(--text2);
+  font-size:14px;
+  line-height:1.75;
+}
+
+.step-card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:16px 20px;
+  margin-top:14px;
+}
+
+.step-list{
+  list-style:none;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+.step-list li{
+  display:flex;
+  align-items:flex-start;
+  gap:10px;
+  font-size:14px;
+  color:var(--text2);
+}
+.step-list li::before{
+  content:'';
+  width:5px;
+  height:5px;
+  border-radius:50%;
+  background:var(--accent);
+  flex-shrink:0;
+  margin-top:8px;
+}
+.step-list li strong{color:var(--text);font-weight:500}
+
+.step-list li a{
+  color:var(--accent);
+  text-decoration:none;
+  font-family:'DM Mono',monospace;
+  font-size:12px;
+  word-break:break-all;
+}
+.step-list li a:hover{text-decoration:underline}
+
+code{
+  font-family:'DM Mono',monospace;
+  font-size:12px;
+  background:var(--surface3);
+  border:1px solid var(--border);
+  border-radius:6px;
+  padding:2px 8px;
+  color:var(--accent);
+}
+
+.highlight-box{
+  background:var(--surface2);
+  border:1px solid var(--border2);
+  border-left:3px solid var(--accent);
+  border-radius:0 var(--radius) var(--radius) 0;
+  padding:14px 18px;
+  margin-top:14px;
+  font-size:13px;
+  color:var(--text2);
+}
+.highlight-box.green{border-left-color:var(--green);background:var(--green-dim)}
+.highlight-box.yellow{border-left-color:var(--yellow);background:var(--yellow-dim)}
+.highlight-box strong{color:var(--text);font-weight:500}
+
+.url-pill{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  background:var(--surface3);
+  border:1px solid var(--border2);
+  border-radius:99px;
+  padding:5px 14px;
+  font-family:'DM Mono',monospace;
+  font-size:12px;
+  color:var(--text2);
+  margin-top:10px;
+  text-decoration:none;
+  transition:border-color .15s,color .15s;
+}
+.url-pill:hover{border-color:var(--accent);color:var(--accent)}
+.url-pill::before{content:'↗';font-size:10px}
+
+/* ── OAUTH FLOW ── */
+.oauth-flow{
+  display:flex;
+  align-items:center;
+  gap:0;
+  margin-top:16px;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  overflow:hidden;
+}
+.oauth-step{
+  flex:1;
+  padding:14px 16px;
+  text-align:center;
+  font-size:12px;
+  position:relative;
+}
+.oauth-step:not(:last-child)::after{
+  content:'›';
+  position:absolute;
+  right:-1px;
+  top:50%;
+  transform:translateY(-50%);
+  color:var(--text3);
+  font-size:18px;
+  z-index:1;
+}
+.oauth-step:not(:first-child){border-left:1px solid var(--border)}
+.oauth-icon{font-size:22px;display:block;margin-bottom:5px}
+.oauth-label{color:var(--text2);line-height:1.3}
+.oauth-label strong{display:block;color:var(--text);font-weight:500;font-size:11px;margin-top:2px}
+
+/* ── IMPORTANT BADGE ── */
+.badge-important{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  background:rgba(231,76,60,0.1);
+  border:1px solid rgba(231,76,60,0.25);
+  border-radius:6px;
+  padding:3px 10px;
+  font-size:11px;
+  font-family:'DM Mono',monospace;
+  color:var(--red);
+  text-transform:uppercase;
+  letter-spacing:.5px;
+  vertical-align:middle;
+  margin-left:8px;
+}
+
+/* ── FINAL CTA ── */
+.cta-section{
+  padding:80px 0;
+  text-align:center;
+  border-top:1px solid var(--border);
+}
+.cta-title{
+  font-family:'Syne',sans-serif;
+  font-weight:800;
+  font-size:clamp(28px,5vw,44px);
+  letter-spacing:-1px;
+  margin-bottom:14px;
+}
+.cta-sub{color:var(--text2);font-size:15px;margin-bottom:32px}
+.cta-btn{
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  background:var(--accent);
+  color:#fff;
+  border:none;
+  border-radius:var(--radius);
+  padding:14px 32px;
+  font-family:'Syne',sans-serif;
+  font-weight:600;
+  font-size:15px;
+  cursor:pointer;
+  text-decoration:none;
+  transition:background .2s,transform .15s;
+}
+.cta-btn:hover{background:var(--accent2);transform:translateY(-2px)}
+
+/* ── FOOTER ── */
+footer{
+  border-top:1px solid var(--border);
+  padding:24px 0;
+  text-align:center;
+  font-size:12px;
+  color:var(--text3);
+  font-family:'DM Mono',monospace;
+}
+
+/* ── SCROLL ANIMATIONS ── */
+.fade-in{
+  opacity:0;
+  transform:translateY(20px);
+  transition:opacity .5s ease,transform .5s ease;
+}
+.fade-in.visible{opacity:1;transform:none}
+
+/* ── RESPONSIVE ── */
+@media(max-width:600px){
+  .step{grid-template-columns:44px 1fr;gap:0 16px}
+  .oauth-flow{flex-direction:column}
+  .oauth-step:not(:last-child)::after{content:'↓';right:50%;bottom:-1px;top:auto;transform:translateX(50%)}
+  .oauth-step:not(:first-child){border-left:none;border-top:1px solid var(--border)}
+  .hero-flow{gap:6px}
+}
+</style>
+</head>
+<body>
+
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<div class="orb orb-3"></div>
+
+<!-- ── HERO ── -->
+<div class="wrap">
+  <section class="hero">
+    <div class="hero-badge">Guía de configuración</div>
+    <h1>Polaroid<span>Bot</span></h1>
+    <p class="hero-sub">Configurá tu bot en minutos y empezá a recibir fotos Polaroid automáticas de tus viewers directamente en Discord.</p>
+    <div class="hero-flow">
+      <span class="flow-chip">💜 Twitch Channel Points</span>
+      <span class="flow-arrow">→</span>
+      <span class="flow-chip">📸 Webcam</span>
+      <span class="flow-arrow">→</span>
+      <span class="flow-chip">🖼 Polaroid</span>
+      <span class="flow-arrow">→</span>
+      <span class="flow-chip">🤖 Discord</span>
+    </div>
+    <div class="hero-divider"></div>
+  </section>
+
+  <!-- ── STEPS ── -->
+  <section class="section">
+    <div class="section-label">Paso a paso</div>
+    <h2 class="section-title">Todo lo que necesitás configurar</h2>
+    <p class="section-desc">Seguí los pasos en orden. Una vez listo, el bot funciona solo cada vez que un viewer reclame la recompensa.</p>
+
+    <div class="steps">
+
+      <!-- STEP 1 -->
+      <div class="step fade-in">
+        <div class="step-left">
+          <div class="step-num">1</div>
+          <div class="step-line"></div>
+        </div>
+        <div class="step-content">
+          <div class="step-title">
+            Crear App de Twitch
+            <span class="step-tag tag-twitch">Twitch Dev</span>
+          </div>
+          <div class="step-body">
+            <div class="step-card">
+              <ul class="step-list">
+                <li>Entrá a <a href="https://dev.twitch.tv/console" target="_blank">dev.twitch.tv/console</a> → <strong>Register Your Application</strong></li>
+                <li>Name: <code>PolaroidBot</code> | Redirect URL: <code>http://localhost:3000</code> | Category: <strong>Broadcasting Suite</strong></li>
+                <li>Hacé click en <strong>Create</strong></li>
+                <li>En tu app → <strong>Manage</strong> → copiá el <strong>Client ID</strong></li>
+                <li>Hacé click en <strong>New Secret</strong> y copiá el <strong>Client Secret</strong></li>
+                <li>Pegá ambos en PolaroidBot → pestaña <strong>Twitch</strong></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 2 -->
+      <div class="step fade-in">
+        <div class="step-left">
+          <div class="step-num">2</div>
+          <div class="step-line"></div>
+        </div>
+        <div class="step-content">
+          <div class="step-title">
+            Obtener tu Broadcaster ID
+            <span class="step-tag tag-twitch">Twitch</span>
+          </div>
+          <div class="step-body">
+            Tu Broadcaster ID es el número único que identifica tu canal.
+            <div class="step-card">
+              <ul class="step-list">
+                <li>Buscá tu nombre de canal en este conversor online:</li>
+              </ul>
+              <a href="https://www.streamweasels.com/tools/convert-twitch-username-to-user-id/" target="_blank" class="url-pill">
+                streamweasels.com/tools/convert-twitch-username-to-user-id
+              </a>
+              <ul class="step-list" style="margin-top:12px">
+                <li>Copiá el número que aparece y pegalo en PolaroidBot → pestaña <strong>Twitch</strong> → campo <strong>Broadcaster ID</strong></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 3 -->
+      <div class="step fade-in">
+        <div class="step-left">
+          <div class="step-num">3</div>
+          <div class="step-line"></div>
+        </div>
+        <div class="step-content">
+          <div class="step-title">
+            Configurar la Channel Point Reward
+            <span class="step-tag tag-twitch">Twitch</span>
+            <span class="badge-important">⚠ Importante</span>
+          </div>
+          <div class="step-body">
+            <div class="step-card">
+              <ul class="step-list">
+                <li>Ir a <a href="https://dashboard.twitch.tv" target="_blank">dashboard.twitch.tv</a> → <strong>Viewer Rewards</strong> → <strong>Channel Points</strong> → <strong>Manage Rewards & Challenges</strong></li>
+                <li>Crear una nueva recompensa con el nombre que quieras, por ejemplo: <code>📸 Polaroid</code></li>
+                <li>Configurá el costo en puntos que prefieras</li>
+                <li>Activar la opción <strong>"Require Viewer to Enter Text"</strong> — esto permite que el viewer escriba el mensaje que aparecerá en la Polaroid</li>
+                <li>Guardá la recompensa</li>
+                <li>En PolaroidBot → pestaña <strong>Twitch</strong> → campo <strong>Nombre de la Reward</strong> → escribí exactamente el mismo título</li>
+              </ul>
+            </div>
+            <div class="highlight-box yellow">
+              <strong>⚠ Sin "Require Viewer to Enter Text"</strong> el bot no recibirá el mensaje del viewer. Este paso es obligatorio.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 4 -->
+      <div class="step fade-in">
+        <div class="step-left">
+          <div class="step-num">4</div>
+          <div class="step-line"></div>
+        </div>
+        <div class="step-content">
+          <div class="step-title">
+            Crear el Bot de Discord
+            <span class="step-tag tag-discord">Discord Dev</span>
+          </div>
+          <div class="step-body">
+            <div class="step-card">
+              <ul class="step-list">
+                <li>Ir a <a href="https://discord.com/developers/applications" target="_blank">discord.com/developers/applications</a> → <strong>New Application</strong></li>
+                <li>Dale el nombre <code>PolaroidBot</code> y hacé click en <strong>Create</strong></li>
+                <li>En el menú izquierdo → <strong>Bot</strong> → <strong>Add Bot</strong> → <strong>Yes, do it!</strong></li>
+                <li>En la sección <strong>Token</strong> → <strong>Reset Token</strong> → copiá el token y pegalo en PolaroidBot → pestaña <strong>Discord</strong></li>
+                <li>En el menú → <strong>OAuth2</strong> → <strong>URL Generator</strong> → Scopes: <code>bot</code></li>
+                <li>Permisos: <strong>Send Messages</strong> + <strong>Attach Files</strong> + <strong>Embed Links</strong> + <strong>View Channel</strong></li>
+                <li>Copiá la URL generada, abrila en el navegador → seleccioná tu servidor → <strong>Autorizar</strong></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 5 -->
+      <div class="step fade-in">
+        <div class="step-left">
+          <div class="step-num">5</div>
+          <div class="step-line"></div>
+        </div>
+        <div class="step-content">
+          <div class="step-title">
+            Obtener el Channel ID de Discord
+            <span class="step-tag tag-discord">Discord</span>
+          </div>
+          <div class="step-body">
+            <div class="step-card">
+              <ul class="step-list">
+                <li>En Discord → <strong>Configuración de usuario</strong> → <strong>Avanzado</strong> → activar <strong>Modo Desarrollador</strong></li>
+                <li>Ir al canal donde querés recibir las Polaroids</li>
+                <li><strong>Click derecho</strong> en el canal → <strong>Copiar ID del canal</strong></li>
+                <li>Pegarlo en PolaroidBot → pestaña <strong>Discord</strong> → campo <strong>Channel ID</strong></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 6 -->
+      <div class="step fade-in">
+        <div class="step-left">
+          <div class="step-num">6</div>
+          <div class="step-line"></div>
+        </div>
+        <div class="step-content">
+          <div class="step-title">
+            Configurar la Cámara
+            <span class="step-tag tag-camera">Webcam</span>
+          </div>
+          <div class="step-body">
+            <div class="step-card">
+              <ul class="step-list">
+                <li>En PolaroidBot → pestaña <strong>Cámara</strong> → click en <strong>Detectar Cámaras</strong></li>
+                <li>La primera vez descarga ffmpeg automáticamente (~100 MB). Solo ocurre una vez.</li>
+                <li>Seleccioná la cámara que querés usar y hacé click en <strong>Guardar</strong></li>
+                <li>Usá <strong>Capturar Preview</strong> para verificar que se ve bien</li>
+              </ul>
+            </div>
+            <div class="highlight-box">
+              <strong>💡 Si usás OBS durante el stream:</strong> en OBS activá <strong>Controles → Iniciar cámara virtual</strong> y seleccioná <strong>OBS Virtual Camera</strong> en PolaroidBot. Así ambos usan la cámara al mismo tiempo sin conflictos.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 7 -->
+      <div class="step fade-in">
+        <div class="step-left">
+          <div class="step-num">7</div>
+          <div class="step-line"></div>
+        </div>
+        <div class="step-content">
+          <div class="step-title">
+            Iniciar el Bot
+            <span class="step-tag tag-app">PolaroidBot</span>
+            <span class="step-tag tag-auto">Auto</span>
+          </div>
+          <div class="step-body">
+            Al hacer click en <strong>▶ Iniciar Bot</strong> se abre el navegador automáticamente para autorizar con tu cuenta de Twitch. Solo ocurre una vez por sesión.
+            <div class="oauth-flow">
+              <div class="oauth-step">
+                <span class="oauth-icon">▶</span>
+                <div class="oauth-label">Click en<strong>Iniciar Bot</strong></div>
+              </div>
+              <div class="oauth-step">
+                <span class="oauth-icon">🌐</span>
+                <div class="oauth-label">Se abre<strong>Twitch en el navegador</strong></div>
+              </div>
+              <div class="oauth-step">
+                <span class="oauth-icon">✅</span>
+                <div class="oauth-label">Click en<strong>Autorizar</strong></div>
+              </div>
+              <div class="oauth-step">
+                <span class="oauth-icon">🟢</span>
+                <div class="oauth-label">Bot activo<strong>Escuchando redeems</strong></div>
+              </div>
+            </div>
+            <div class="highlight-box green">
+              <strong>✅ Listo.</strong> Cuando un viewer reclame la recompensa y escriba su mensaje, PolaroidBot captura la foto, genera la Polaroid y la envía a Discord automáticamente.
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── CTA ── -->
+  <section class="cta-section fade-in">
+    <div class="cta-title">¿Todo listo?</div>
+    <p class="cta-sub">Abrí PolaroidBot, completá los campos y dale ▶ Iniciar Bot.</p>
+    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+      <a href="https://dashboard.twitch.tv" target="_blank" class="cta-btn" style="background:var(--surface2);color:var(--text);border:1px solid var(--border2);">
+        💜 Ir a Twitch
+      </a>
+      <a href="https://discord.com/developers/applications" target="_blank" class="cta-btn" style="background:#5865f2">
+        🤖 Ir a Discord Dev
+      </a>
+    </div>
+  </section>
+</div>
+
+<footer>
+  <div class="wrap">
+    PolaroidBot &nbsp;·&nbsp; Twitch → Webcam → Discord
+  </div>
+</footer>
+
+<script>
+const obs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+      obs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.fade-in').forEach((el, i) => {
+  el.style.transitionDelay = (i * 60) + 'ms';
+  obs.observe(el);
+});
+</script>
+</body>
+</html>
